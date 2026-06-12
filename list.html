@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="WhatsApp Image 2026-06-12 at 2.25.04 PM.jpeg">
+<title>TOKYO Anime Tracker</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+body{
+    background: black;
+    color: white;
+    padding-bottom: 60px;
+}
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px;
+    flex-wrap:wrap;
+    background: #0d0d0d;
+    border-bottom: 2px solid red;
+}
+.logo{
+    font-size:40px;
+    font-weight:bold;
+}
+.logo img{
+    width:200px;
+    border-radius:10px;
+}
+.menu a{
+    color:white;
+    margin:10px;
+    text-decoration:none;
+    font-weight: bold;
+}
+.menu a:hover, .menu a.active{
+    color:red;
+    text-decoration:underline;
+}
+
+/* Hero Section */
+.hero{
+    padding:60px 20px;
+    text-align:center;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.95));
+    border-bottom: 1px solid #222;
+}
+.hero h1{
+    font-size:50px;
+}
+.hero span{
+    color:red;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+.hero p{
+    color:#aaa;
+    margin-top:10px;
+}
+
+/* Layout Split: Form Left, List Right */
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 30px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+@media (min-width: 768px) {
+    .main-layout {
+        grid-template-columns: 350px 1fr;
+    }
+}
+
+/* Tracker Form Styling */
+.form-panel {
+    background: #111;
+    border: 1px solid #333;
+    padding: 25px;
+    border-radius: 10px;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+.form-panel h2 {
+    color: red;
+    font-size: 22px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.form-panel input, .form-panel select {
+    width: 100%;
+    padding: 10px;
+    background: #000;
+    border: 1px solid #444;
+    color: white;
+    border-radius: 5px;
+    font-size: 15px;
+}
+.form-panel input:focus, .form-panel select:focus {
+    outline: none;
+    border-color: red;
+}
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.btn {
+    width: 100%;
+    padding: 12px;
+    background: red;
+    border: none;
+    color: white;
+    margin-top: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    text-transform: uppercase;
+}
+.btn:hover {
+    background: #cc0000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+}
+
+/* Stats Counter Grid Dashboard */
+.stats-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.stat-card {
+    background: #111;
+    border: 1px solid #222;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+.stat-card.total-card {
+    border-color: red;
+}
+.stat-card h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+}
+.stat-card p {
+    font-size: 24px;
+    font-weight: bold;
+}
+.stat-card.total-card p { color: red; }
+.stat-card .watching-count { color: #00ff88; }
+.stat-card .completed-count { color: #00ccff; }
+.stat-card .plan-count { color: #ffbb00; }
+.stat-card .hold-count { color: #ff4444; }
+
+/* Filters */
+.filter-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    background: #111;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #222;
+}
+.filter-btn {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: 0.2s;
+}
+.filter-btn:hover {
+    color: white;
+    background: #222;
+}
+.filter-btn.active {
+    background: red;
+    color: white;
+}
+
+/* Dynamic Cards List */
+.tracker-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.tracker-card {
+    background: #111;
+    border-left: 4px solid red;
+    border-top: 1px solid #222;
+    border-right: 1px solid #222;
+    border-bottom: 1px solid #222;
+    border-radius: 6px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    transition: 0.2s;
+}
+.tracker-card:hover {
+    border-color: red;
+    background: #151515;
+}
+.info-block h3 {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+.badge-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.status-badge {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 3px 8px;
+    background: #222;
+    border-radius: 3px;
+    color: #ccc;
+}
+.status-badge.watching { color: #00ff88; }
+.status-badge.completed { color: #00ccff; }
+.status-badge.plan { color: #ffbb00; }
+.status-badge.hold { color: #ff4444; }
+
+.rating-badge {
+    font-size: 12px;
+    color: gold;
+    font-weight: bold;
+}
+
+/* Controls Box */
+.controls-block {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.counter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.counter-btn {
+    width: 32px;
+    height: 32px;
+    background: #222;
+    border: 1px solid #444;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.counter-btn:hover {
+    background: red;
+    border-color: red;
+}
+.counter-display {
+    text-align: center;
+}
+.counter-display span {
+    display: block;
+    font-size: 10px;
+    color: #666;
+    text-transform: uppercase;
+}
+.counter-display p {
+    font-size: 16px;
+    font-weight: bold;
+}
+.delete-btn {
+    background: transparent;
+    border: none;
+    color: #555;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.delete-btn:hover {
+    color: red;
+}
+.empty-msg {
+    text-align: center;
+    color: #555;
+    padding: 40px;
+    font-style: italic;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo"><img src="WhatsApp Image 2026-06-11 at 1.40.18 PM.jpeg" alt="Tokyo"></div>
+    <div class="menu">
+            <a href="#list" class="active">My List </a>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1><span>TOKYO</span> Watchlist Tracker</h1>
+    <p>Keep logs of your episodes, statuses, and personal scores.</p>
+</section>
+
+<div class="main-layout">
+    
+    <div class="form-panel">
+        <h2>Add Anime</h2>
+        <form id="trackerForm">
+            <div class="form-group">
+                <label>Anime Title</label>
+                <input type="text" id="title" required placeholder="Enter anime name....">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Current Ep</label>
+                    <input type="number" id="currentEp" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Total Eps</label>
+                    <input type="number" id="totalEp" min="0" placeholder="?">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="status">
+                        <option value="Watching">Watching</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Plan to Watch">Plan to Watch</option>
+                        <option value="On Hold">On Hold</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Your Rating</label>
+                    <select id="rating">
+                        <option value="N/A">N/A</option>
+                        <option value="⭐ 10/10">10/10</option>
+                        <option value="⭐ 9/10">9/10</option>
+                        <option value="⭐ 8/10">8/10</option>
+                        <option value="⭐ 7/10">7/10</option>
+                        <option value="⭐ 6/10">6/10</option>
+                        <option value="⭐ 5/10">5/10</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn">Add To Tracker</button>
+        </form>
+    </div>
+
+    <div>
+        <div class="stats-dashboard">
+            <div class="stat-card total-card">
+                <h4>Total Anime</h4>
+                <p id="totalAnimeCount">0</p>
+            </div>
+            <div class="stat-card">
+                <h4>Watching</h4>
+                <p id="watchingAnimeCount" class="watching-count">0</p>
+            </div>
+            <div class="stat-card">
+                <h4>Completed</h4>
+                <p id="completedAnimeCount" class="completed-count">0</p>
+            </div>
+            <div class="stat-card">
+                <h4>Plan to Watch</h4>
+                <p id="planAnimeCount" class="plan-count">0</p>
+            </div>
+            <div class="stat-card">
+                <h4>On Hold</h4>
+                <p id="holdAnimeCount" class="hold-count">0</p>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <button onclick="changeFilter('All')" class="filter-btn active" data-filter="All">All</button>
+            <button onclick="changeFilter('Watching')" class="filter-btn" data-filter="Watching">Watching</button>
+            <button onclick="changeFilter('Completed')" class="filter-btn" data-filter="Completed">Completed</button>
+            <button onclick="changeFilter('Plan to Watch')" class="filter-btn" data-filter="Plan to Watch">Plan to Watch</button>
+            <button onclick="changeFilter('On Hold')" class="filter-btn" data-filter="On Hold">On Hold</button>
+        </div>
+
+        <div id="trackerDisplay" class="tracker-list">
+            </div>
+    </div>
+</div>
+
+<script>
+// Load Database items from localStorage
+let myAnimeList = JSON.parse(localStorage.getItem('tokyoAnimeData')) || [];
+let currentFilter = 'All';
+
+const trackerForm = document.getElementById('trackerForm');
+const trackerDisplay = document.getElementById('trackerDisplay');
+
+// Class mapper for status highlights 
+const badgeClasses = {
+    'Watching': 'watching',
+    'Completed': 'completed',
+    'Plan to Watch': 'plan',
+    'On Hold': 'hold'
+};
+
+// Form Processing Submits
+trackerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const animeEntry = {
+        id: Date.now(),
+        title: document.getElementById('title').value,
+        currentEp: parseInt(document.getElementById('currentEp').value) || 0,
+        totalEp: document.getElementById('totalEp').value ? parseInt(document.getElementById('totalEp').value) : '?',
+        status: document.getElementById('status').value,
+        rating: document.getElementById('rating').value
+    };
+
+    myAnimeList.push(animeEntry);
+    saveDataAndRefresh();
+    trackerForm.reset();
+});
+
+function saveDataAndRefresh() {
+    localStorage.setItem('tokyoAnimeData', JSON.stringify(myAnimeList));
+    renderTracker();
+}
+
+function adjustEp(id, amount) {
+    const item = myAnimeList.find(target => target.id === id);
+    if(item) {
+        if(amount > 0 && (item.totalEp === '?' || item.currentEp < item.totalEp)) {
+            item.currentEp++;
+            if(item.currentEp === item.totalEp) item.status = 'Completed';
+        } else if (amount < 0 && item.currentEp > 0) {
+            item.currentEp--;
+        }
+        saveDataAndRefresh();
+    }
+}
+
+function removeEntry(id) {
+    myAnimeList = myAnimeList.filter(target => target.id !== id);
+    saveDataAndRefresh();
+}
+
+function changeFilter(targetStatus) {
+    currentFilter = targetStatus;
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        if(btn.getAttribute('data-filter') === targetStatus) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+    renderTracker();
+}
+
+// Calculates and updates dashboard numbers
+function updateStatsDashboard() {
+    const total = myAnimeList.length;
+    const watching = myAnimeList.filter(item => item.status === 'Watching').length;
+    const completed = myAnimeList.filter(item => item.status === 'Completed').length;
+    const plan = myAnimeList.filter(item => item.status === 'Plan to Watch').length;
+    const hold = myAnimeList.filter(item => item.status === 'On Hold').length;
+
+    document.getElementById('totalAnimeCount').textContent = total;
+    document.getElementById('watchingAnimeCount').textContent = watching;
+    document.getElementById('completedAnimeCount').textContent = completed;
+    document.getElementById('planAnimeCount').textContent = plan;
+    document.getElementById('holdAnimeCount').textContent = hold;
+}
+
+function renderTracker() {
+    // Refresh counters every time rendering happens
+    updateStatsDashboard();
+    
+    trackerDisplay.innerHTML = '';
+    
+    const operationalData = myAnimeList.filter(item => currentFilter === 'All' || item.status === currentFilter);
+
+    if (operationalData.length === 0) {
+        trackerDisplay.innerHTML = `<div class="empty-msg">No anime logs found under "${currentFilter}" filter.</div>`;
+        return;
+    }
+
+    operationalData.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "tracker-card";
+        
+        card.innerHTML = `
+            <div class="info-block">
+                <div class="badge-row">
+                    <span class="status-badge ${badgeClasses[item.status]}">${item.status}</span>
+                    ${item.rating !== 'N/A' ? `<span class="rating-badge">${item.rating}</span>` : ''}
+                </div>
+                <h3>${item.title}</h3>
+            </div>
+            
+            <div class="controls-block">
+                <div class="counter">
+                    <button type="button" class="counter-btn" onclick="adjustEp(${item.id}, -1)">-</button>
+                    <div class="counter-display">
+                        <span>Progress</span>
+                        <p>${item.currentEp} / ${item.totalEp}</p>
+                    </div>
+                    <button type="button" class="counter-btn" onclick="adjustEp(${item.id}, 1)">+</button>
+                </div>
+                <button type="button" class="delete-btn" onclick="removeEntry(${item.id})" title="Delete entry">✕</button>
+            </div>
+        `;
+        trackerDisplay.appendChild(card);
+    });
+}
+
+// Kickstart processing logic layout on load 
+renderTracker();
+</script>
+
+</body>
+</html>

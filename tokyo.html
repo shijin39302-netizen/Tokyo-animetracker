@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="WhatsApp Image 2026-06-12 at 2.25.04 PM.jpeg">
+<title>TOKYO Anime Tracker</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+body{
+    background:black;
+    color:white;
+}
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px;
+    flex-wrap:wrap;
+}
+.logo{
+    font-size:40px;
+    font-weight:bold;
+}
+
+.logo img{
+    width:200px;
+    border-radius:10px;
+}
+
+#search{
+    width:250px;
+    padding:10px;
+    border:none;
+    border-radius:5px;
+    font-size:16px;
+    background: #222;
+    color: white;
+}
+#search:focus {
+    outline: 1px solid red;
+}
+
+.menu a{
+    color:white;
+    margin:10px;
+    text-decoration:none;
+}
+
+.menu a:hover{
+    color:red;
+    text-decoration:underline;
+}
+
+.hero{
+    padding:80px 20px;
+    text-align:center;
+    background:linear-gradient(
+    rgba(0,0,0,.2),
+    rgba(0,0,0,.9)),
+    url("ChatGPT\ Image\ Jun\ 11\,\ 2026\,\ 02_41_50\ PM.png");
+    background-size:cover;
+    background-position:center;
+}
+
+.hero h1{
+font-size:60px;
+margin-left: 0px;
+}
+
+.hero span{
+color:red;
+}
+
+.hero p{
+color:#aaa;
+margin-top:10px;
+}
+
+.btn{
+    padding: 1px 30px;
+    font-size: 22px;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+
+    /* Animation */
+    animation: colorGlow 3s infinite alternate;
+}
+
+/* Auto color + glow effect */
+@keyframes colorGlow {
+    0%{
+        background:#ff3b3b;
+        box-shadow:0 0 20px #ff3b3b;
+    }
+
+    25%{
+        background:#ff7b00;
+        box-shadow:0 0 30px #ff7b00;
+    }
+
+    50%{
+        background:#ff00ff;
+        box-shadow:0 0 40px #ff00ff;
+    }
+
+    75%{
+        background:#aa0e6e;
+        box-shadow:0 0 35px #c60b78;
+    }
+
+    100%{
+        background:#ed0606;
+        box-shadow:0 0 45px #ea0c0c;
+    }
+}
+
+.section{
+    padding:20px;
+}
+
+#animeContainer{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:#222;
+    border-radius:10px;
+    overflow:hidden;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:scale(1.03);
+}
+
+.card img{
+    width:100%;
+    height:350px;
+    object-fit:cover;
+}
+
+.card-content{
+    padding:15px;
+}
+
+.card h3{
+    margin-bottom:10px;
+}
+
+.score{
+    color:gold;
+    margin-bottom:10px;
+}
+
+.synopsis{
+    color:#ddd;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo"><img src="WhatsApp Image 2026-06-11 at 1.40.18 PM.jpeg" alt="Tokyo"></div>
+
+    <input type="text" id="search" placeholder="Search Anime...">
+
+    <div class="menu">
+            <a href="#home">Home</a>
+            <a href="#watch">Ratings</a>
+            <a href="./list.html">My List</a>
+    </div>
+</nav>
+<!-- Hero Section -->
+    <section id="home" class="hero">
+    <h1>Welcom to <span>TOKYO</span></h1>
+    <p>Create your anime watch list and discover new anime.</p>
+    <button class="btn">TOKYO</button>
+</section>
+<!-- ratings Section -->
+    <section id="watch" class="section">
+    <h2 style="margin-bottom:20px;">Top Anime</h2>
+    <div id="animeContainer"></div>
+</section>
+
+<script>
+const container = document.getElementById("animeContainer");
+const searchBox = document.getElementById("search");
+
+async function loadAnime(search = "") {
+
+    let url = search === ""
+        ? "https://api.jikan.moe/v4/top/anime"
+        : `https://api.jikan.moe/v4/anime?q=${search}&limit=20`;
+
+    try{
+        const response = await fetch(url);
+        const data = await response.json();
+
+        container.innerHTML = "";
+
+        data.data.forEach(anime => {
+
+            container.innerHTML += `
+            <div class="card">
+                <img src="${anime.images.jpg.image_url}" alt="${anime.title}">
+                <div class="card-content">
+                    <h3>${anime.title}</h3>
+                    <div class="score">⭐ ${anime.score || "N/A"}</div>
+                    <p class="synopsis">
+                        ${(anime.synopsis || "No description available.")
+                        .substring(0,150)}...
+                    </p>
+                </div>
+            </div>
+            `;
+        });
+
+    }catch(error){
+        container.innerHTML =
+        "<h2>Failed to load anime. Try again later.</h2>";
+    }
+}
+
+loadAnime();
+
+searchBox.addEventListener("input", () => {
+    loadAnime(searchBox.value.trim());
+});
+</script>
+
+</body>
+</html>
